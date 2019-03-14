@@ -17,36 +17,35 @@ WORDPRESS_DB_PASSWORD和MYSQL_PASSWORD的密码应该是相同的
 docker-compose.yml
 
 ```
-version: '3.3'
-​
+version: '3'
 services:
-wordpress:
-  depends_on:
- - db
-  image: wordpress:latest
-  volumes:
- - wordpress_files:/var/www/html
-  ports:
- - "80:80"
-  restart: always
-  environment:
- WORDPRESS_DB_HOST: db:3306
- WORDPRESS_DB_USER: wordpress
- WORDPRESS_DB_PASSWORD: my_wordpress_db_password
-​
-db:
-  image: mysql:5.7
-  volumes:
- - db_data:/var/lib/mysql
-  restart: always
-  environment:
- MYSQL_ROOT_PASSWORD: my_db_root_password
- MYSQL_DATABASE: wordpress
- MYSQL_USER: wordpress
- MYSQL_PASSWORD: my_wordpress_db_password
+   db:
+     image: mysql:5.7
+     volumes:
+       - db_data:/var/lib/mysql
+     restart: always
+     environment:
+       MYSQL_ROOT_PASSWORD: your-mysql-root-password
+       MYSQL_DATABASE: wordpress
+       MYSQL_USER: wordpress
+       MYSQL_PASSWORD: wordpress
+   wordpress:
+     depends_on:
+       - db
+     image: wordpress:latest
+     volumes:
+        - wp_site:/var/www/html
+     ports:
+       - "80:80"
+       - "443:443"
+     restart: always
+     environment:
+       WORDPRESS_DB_HOST: db:3306
+       WORDPRESS_DB_USER: wordpress
+       WORDPRESS_DB_PASSWORD: wordpress
 volumes:
- wordpress_files:
- db_data:
+    db_data:
+    wp_site:
 ```
 
 从my_wordpress目录中启动Docker容器：
